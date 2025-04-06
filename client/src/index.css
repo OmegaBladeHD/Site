@@ -1,0 +1,314 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles spécifiques pour les éléments de navigation en mode sombre */
+.dark nav a::after {
+  background-color: rgba(170, 80, 255, 0.7) !important;
+}
+
+.dark nav a:hover {
+  text-shadow: 0 0 8px rgba(170, 80, 255, 0.5);
+}
+
+/* Enlever les styles de header qui sont maintenant gérés par Tailwind */
+
+.dark h1, .dark h2, .dark h3 {
+  text-shadow: 0 0 10px rgba(170, 80, 255, 0.1);
+}
+
+.dark hr {
+  background: linear-gradient(to right, transparent, rgba(170, 80, 255, 0.3), transparent);
+  border: none;
+  height: 1px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Animation de transition entre les thèmes */
+  /* Cette animation se fait de haut en bas sur tout l'écran */
+  @keyframes theme-sweep {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  .theme-transition::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom,
+      var(--gradient-start) 0%,
+      var(--gradient-middle) 50%,
+      var(--gradient-end) 100%
+    );
+    z-index: 9999;
+    pointer-events: none;
+    animation: theme-sweep 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .to-dark {
+    --gradient-start: theme('colors.white');
+    --gradient-middle: theme('colors.gray.800');
+    --gradient-end: theme('colors.black');
+  }
+
+  .to-light {
+    --gradient-start: theme('colors.gray.900');
+    --gradient-middle: theme('colors.gray.400');
+    --gradient-end: theme('colors.white');
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* État initial de l'animation */
+  html.theme-transition {
+    position: relative;
+  }
+  
+  html.theme-transition body::before {
+    opacity: 1;
+    visibility: visible;
+    animation: theme-sweep 5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  
+  /* Définition des couleurs pour l'animation de transition vers le mode sombre */
+  html.theme-transition.to-dark body::before {
+    background: linear-gradient(to bottom,
+      hsl(265, 85%, 5%),
+      hsl(265, 82%, 8%)
+    );
+  }
+  
+  /* Définition des couleurs pour l'animation de transition vers le mode clair */
+  html.theme-transition.to-light body::before {
+    background: linear-gradient(to bottom,
+      hsl(0, 0%, 100%),
+      hsl(210, 25%, 98%)
+    );
+  }
+  
+  /* Transitions des éléments pendant le changement de thème */
+  html.theme-transition *,
+  html.theme-transition *:before,
+  html.theme-transition *:after {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-duration: 5000ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+  
+  /* Background pour le mode sombre */
+  .dark body {
+    background-image: 
+      radial-gradient(circle at 20% 25%, rgba(140, 0, 255, 0.03) 0%, transparent 30%),
+      radial-gradient(circle at 80% 75%, rgba(100, 0, 255, 0.04) 0%, transparent 40%);
+  }
+
+  /* Mode sombre très violet et foncé */
+  .dark {
+    --foreground: hsl(210, 100%, 95%);
+    --background: hsl(265, 85%, 5%);
+    --background-dark: hsl(265, 90%, 3%);
+    --primary-light: hsl(265, 80%, 70%);
+    --card: hsl(265, 70%, 8%);
+    --card-foreground: hsl(210, 100%, 98%);
+    --border: hsl(265, 70%, 15%);
+    --muted: hsl(265, 50%, 20%);
+    --muted-foreground: hsl(210, 80%, 80%);
+    --accent: hsl(265, 70%, 20%);
+    --accent-foreground: hsl(210, 100%, 98%);
+    --popover: hsl(265, 70%, 6%);
+    --popover-foreground: hsl(210, 100%, 95%);
+    --destructive: hsl(0, 80%, 50%);
+    --destructive-foreground: hsl(210, 100%, 98%);
+    --ring: hsl(265, 80%, 50%);
+    --input: hsl(265, 70%, 15%);
+  }
+  
+  /* S'assurer que tout le corps de la page est sombre */
+  html.dark body {
+    background-color: hsl(265, 85%, 5%);
+    color: hsl(210, 100%, 95%);
+  }
+  
+  /* S'assurer que le changement de thème s'applique à tous les éléments */
+  html.dark * {
+    --tw-text-opacity: 1;
+    color-scheme: dark;
+  }
+
+  :root {
+    --foreground: hsl(224, 30%, 18%);
+    --background: hsl(210, 25%, 99%);
+    --background-dark: hsl(210, 25%, 96%);
+    --primary-light: hsl(265, 70%, 50%);
+    --card: hsl(210, 25%, 98%);
+    --card-foreground: hsl(224, 30%, 15%);
+    --border: hsl(210, 25%, 90%);
+    --muted: hsl(210, 25%, 92%);
+    --muted-foreground: hsl(224, 20%, 40%);
+    --accent: hsl(210, 25%, 95%);
+    --accent-foreground: hsl(224, 30%, 18%);
+    --popover: hsl(210, 25%, 99%);
+    --popover-foreground: hsl(224, 30%, 18%);
+    --destructive: hsl(0, 80%, 45%);
+    --destructive-foreground: hsl(0, 0%, 100%);
+    --ring: hsl(265, 70%, 50%);
+    --input: hsl(210, 25%, 92%);
+  }
+}
+
+/* Animations de page */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.page-transition-exit {
+  opacity: 1;
+}
+.page-transition-exit-active {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@layer components {
+  /* Animations de boutons et éléments interactifs */
+  a, button, .card {
+    @apply transition-all duration-300;
+  }
+
+  a:hover, button:hover {
+    @apply transform hover:scale-[1.02];
+  }
+  
+  /* Effets spéciaux pour le mode sombre */
+  .dark button.bg-primary,
+  .dark a.bg-primary {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(140, 0, 255, 0.2);
+    border: 1px solid rgba(180, 100, 255, 0.2);
+  }
+  
+  .dark button.bg-primary:hover,
+  .dark a.bg-primary:hover {
+    box-shadow: 0 0 15px rgba(170, 40, 255, 0.3);
+    border: 1px solid rgba(200, 120, 255, 0.3);
+  }
+  
+  .dark button.bg-primary::before,
+  .dark a.bg-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(125deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  
+  .dark button.bg-primary:hover::before,
+  .dark a.bg-primary:hover::before {
+    transform: translateX(100%);
+  }
+
+  /* Améliorations des cards */
+  .card {
+    @apply hover:shadow-lg dark:hover:shadow-primary/10 relative overflow-hidden;
+  }
+
+  /* Effet de brillance sur l'hover en mode sombre */
+  .dark .card::before,
+  .dark .content-card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-tr from-transparent via-[#8a00ff]/20 to-transparent opacity-0 transition-opacity duration-500 pointer-events-none z-10 rounded-xl;
+  }
+  
+  .dark .card:hover::before,
+  .dark .content-card:hover::before {
+    @apply opacity-100;
+  }
+  
+  /* Ajout d'un point lumineux suivant le curseur sur les cards en mode sombre */
+  .dark .card:hover,
+  .dark .content-card:hover {
+    @apply shadow-lg relative;
+    background-position: var(--xPos, 0) var(--yPos, 0);
+    background-image: radial-gradient(
+      circle 8rem at var(--xPos, 0) var(--yPos, 0),
+      rgba(170, 80, 255, 0.25),
+      transparent 40%
+    );
+  }
+  
+  /* Effet de reflet sur le bord des cartes en mode sombre */
+  .dark .card,
+  .dark .content-card {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(120, 0, 255, 0.05);
+    transition: all 0.5s ease;
+  }
+  
+  .dark .card:hover,
+  .dark .content-card:hover {
+    box-shadow: 0 0 25px rgba(150, 20, 255, 0.15);
+  }
+  
+  .dark .card::after,
+  .dark .content-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom left,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(180, 100, 255, 0.1) 50%,
+      transparent 100%
+    );
+    opacity: 0;
+    transform: rotate(30deg);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  .dark .card:hover::after,
+  .dark .content-card:hover::after {
+    opacity: 1;
+    transform: rotate(25deg);
+  }
+}
